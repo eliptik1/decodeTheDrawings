@@ -11,7 +11,13 @@ const INITIAL_CAMERA_POSITION = {
 
 const BALLS = initializeBalls();
 
-drawOutput();
+console.log("balls", BALLS);
+const INITIAL_DISTANCES_TO_BALLS = BALLS.map((ball) =>
+  distance(ball, INITIAL_CAMERA_POSITION)
+);
+
+const cameraPositions = [];
+let initialApparentRadii = null;
 
 fileInput.onchange = function (event) {
   const file = event.target.files[0];
@@ -49,6 +55,29 @@ function loop() {
   const imageData = ctx.getImageData(0, 0, width, height);
   const rgbCounts = segmentImage(imageData);
   const apparentRadii = rgbCounts.map((area) => Math.sqrt(area / Math.PI));
+
+  if (!initialApparentRadii) {
+    initialApparentRadii = apparentRadii;
+  }
+
+  const distancesToBalls = [];
+
+  for (let i = 0; i < apparentRadii.length; i++) {
+    const ratio = initialApparentRadii[i] / apparentRadii[i];
+    distancesToBalls[i] = INITIAL_DISTANCES_TO_BALLS[i] * ratio;
+  }
+
+  const a = DISTANCE_BETWEEN_BALLS;
+  const b = distancesToBalls[2]; // blue ball
+  const c = distancesToBalls[1]; // green ball
+  const x = (b ** 2 - a ** 2 - c ** 2) / (2 * a); //x coordinate of the camera (intersection of green & blue circles)
+  const z = Math.sqrt(c ** 2 - x ** 2); //z coordinate of the camera
+  const xOffset = a / 2;
+  const cameraPosition = { x: x + xOffset, z };
+  cameraPositions.push(cameraPosition);
+
+  drawOutput(distancesToBalls, cameraPositions);
+
   requestAnimationFrame(loop);
 }
 
@@ -103,28 +132,45 @@ function initializeBalls() {
   ];
 }
 
-function drawOutput() {
+function drawOutput(initialDistancesToBalls, path) {
   const ctx = outputCanvas.getContext("2d");
+  const { width, height } = outputCanvas;
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, width, height);
 
+  ctx.fillStyle = "black";
   ctx.textBaseline = "top";
   ctx.font = "20px Arial";
   ctx.fillText("Top view", 5, 5);
 
   ctx.save();
-  ctx.translate(outputCanvas.width / 2, outputCanvas.height / 2);
+  ctx.translate(width / 2, height / 2);
   ctx.scale(5, 5);
-  for (let i = BALLS.length - 1; i >= 0; i--) {
+  for (let i = BALLS.length - 1; i >= 1; i--) {
     const { x, z, radius, color } = BALLS[i];
     ctx.beginPath();
     ctx.arc(x, z, radius, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.fill();
+
+    ctx.lineWidth = 0.2;
+    ctx.beginPath();
+    ctx.arc(x, z, initialDistancesToBalls[i], 0, Math.PI * 2);
+    ctx.strokeStyle = color;
+    ctx.stroke();
   }
 
-  ctx.beginPath();
-  const { x, z } = INITIAL_CAMERA_POSITION;
-  ctx.arc(x, z, 2, 0, Math.PI * 2);
-  ctx.fillStyle = "black";
-  ctx.fill();
+  path.forEach((point) => {
+    ctx.beginPath();
+    const { x, z } = point;
+    ctx.arc(x, z, 0.5, 0, Math.PI * 2);
+    ctx.fillStyle = "black";
+    ctx.fill();
+  });
+
   ctx.restore();
+}
+
+function distance(p1, p2) {
+  return Math.hypot(p2.x - p1.x, p2.y - p1.y, p2.z - p1.z);
 }
