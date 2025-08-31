@@ -7,26 +7,37 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <p>input:</p>
-    <video
-      id="inputVideo"
-      style="display: none"
-      src="./videos/1.mp4"
-      autoplay
-    ></video>
-    <canvas id="inputCanvas"></canvas>
-    <input id="fileInput" type="file" accept="video/*" />
     <div>
-      <p>segmentation:</p>
-      <button id="defaultMode">Default</button>
-      <button id="red">Red</button>
-      <button id="green">Green</button>
-      <button id="blue">Blue</button>
+      <div>
+        <p>input:</p>
+        <video
+          id="inputVideo"
+          style="display: none"
+          src="./videos/1.mp4"
+          autoplay
+        ></video>
+        <canvas id="inputCanvas"></canvas>
+      </div>
+      <input id="fileInput" type="file" accept="video/*" />
+      <div>
+        <p>segmentation:</p>
+        <button id="defaultMode">Default</button>
+        <button id="red">Red</button>
+        <button id="green">Green</button>
+        <button id="blue">Blue</button>
+      </div>
+      <canvas id="segmentationCanvas"></canvas>
     </div>
-    <canvas id="segmentationCanvas"></canvas>
-    <p>output:</p>
-    <canvas id="outputCanvas" width="400" height="700"></canvas>
+    <div>
+      <p>output:</p>
+      <canvas id="outputCanvas" width="800" height="1400"></canvas>
+    </div>
 
+    <script src="math.js"></script>
+    <script src="parameters.js"></script>
+    <script src="imageProcessing.js"></script>
+    <script src="estimator.js"></script>
+    <script src="output.js"></script>
     <script src="main.js"></script>
   </body>
 </html>
