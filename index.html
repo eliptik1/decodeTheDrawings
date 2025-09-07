@@ -7,33 +7,39 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div>
+    <div id="startPanel">
+      <input
+        id="fileInput"
+        type="file"
+        accept="video/*"
+        style="display: none"
+      />
+      <button id="videoButton">Video</button>
+      <button id="simulationButton">Simulation</button>
+    </div>
+    <div id="mainInterface" style="display: none">
       <div>
         <p>input:</p>
-        <video
-          id="inputVideo"
-          style="display: none"
-          src="./videos/1.mp4"
-          autoplay
-        ></video>
-        <canvas id="inputCanvas"></canvas>
-      </div>
-      <canvas id="simulationCanvas" width="1280" height="720"></canvas>
-      <input id="fileInput" type="file" accept="video/*" />
-      <div>
+        <video id="inputVideo" style="display: none"></video>
+        <canvas id="videoCanvas"></canvas>
+        <canvas id="simulationCanvas" width="1280" height="720"></canvas>
         <p>segmentation:</p>
-        <button id="defaultMode">Default</button>
+        <canvas id="segmentationCanvas"></canvas>
+      </div>
+      <div>
+        <p>output:</p>
+        <canvas id="outputCanvas" width="800" height="1400"></canvas>
+      </div>
+
+      <div>
+        <!-- <button id="defaultMode">Default</button>
         <button id="red">Red</button>
         <button id="green">Green</button>
-        <button id="blue">Blue</button>
+        <button id="blue">Blue</button> -->
       </div>
-      <canvas id="segmentationCanvas"></canvas>
-    </div>
-    <div>
-      <p>output:</p>
-      <canvas id="outputCanvas" width="800" height="1400"></canvas>
     </div>
 
+    <script src="input.js"></script>
     <script src="math.js"></script>
     <script src="parameters.js"></script>
     <script src="imageProcessing.js"></script>

@@ -1,6 +1,5 @@
 body {
   display: flex;
-  gap: 16px;
   font-family: sans-serif;
 }
 
@@ -8,4 +7,16 @@ canvas {
   width: 400px;
   background-color: silver;
   border: 1px solid black;
+}
+
+#mainInterface {
+  justify-content: space-between;
+  width: 100%;
+}
+
+#startPanel {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
