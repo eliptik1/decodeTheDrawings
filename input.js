@@ -33,8 +33,9 @@ simulationButton.onclick = function () {
 
 function getInputImageData() {
   let imgData = null;
+  let trueCameraPosition = null;
   if (inputType == "simulation") {
-    updateSimulation();
+    trueCameraPosition = updateSimulation();
     imgData = getSimulationImageData();
   } else {
     const { width, height } = videoCanvas;
@@ -42,7 +43,7 @@ function getInputImageData() {
     ctx.drawImage(inputVideo, 0, 0);
     imgData = ctx.getImageData(0, 0, width, height);
   }
-  return imgData;
+  return { imgData, trueCameraPosition };
 }
 
 let colorMode = "default";

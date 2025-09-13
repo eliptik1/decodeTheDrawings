@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pinhole Camera Model</title>
+  </head>
+  <body>
+    <canvas
+      id="myCanvas"
+      width="800"
+      height="800"
+      style="border: 1px solid black"
+    ></canvas>
+
+    <script src="vector.js"></script>
+    <script>
+      const ctx = myCanvas.getContext("2d");
+      const { width, height } = myCanvas;
+
+      const pinhole = { x: width / 2, y: height / 2 };
+      const focalLength = 200;
+      const sensor = {
+        x: pinhole.x,
+        y: pinhole.y + focalLength,
+        width: 500,
+      };
+
+      const balls = [
+        {
+          x: pinhole.x - height * 0.15,
+          y: pinhole.y - height * 0.2,
+          radius: 40,
+        },
+        {
+          x: pinhole.x,
+          y: pinhole.y - height * 0.25,
+          radius: 40,
+        },
+      ];
+
+      //sensor
+      ctx.beginPath();
+      ctx.moveTo(sensor.x - sensor.width / 2, sensor.y);
+      ctx.lineTo(sensor.x + sensor.width / 2, sensor.y);
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = "gray";
+      ctx.stroke();
+
+      //lens
+      ctx.beginPath();
+      ctx.moveTo(0, pinhole.y);
+      ctx.lineTo(width, pinhole.y);
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "gray";
+      ctx.stroke();
+
+      //pinhole
+      ctx.beginPath();
+      ctx.arc(pinhole.x, pinhole.y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = "white";
+      ctx.fill();
+
+      //hemisphere
+      ctx.beginPath();
+      ctx.arc(pinhole.x, pinhole.y, focalLength, 0, Math.PI);
+      ctx.strokeStyle = "red";
+      ctx.stroke();
+
+      //balls
+      balls.forEach((ball) => {
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "silver";
+        ctx.fill();
+
+        //point on the side of ball
+        const delta = subtract(pinhole, ball);
+        const norm = normalize(delta);
+        const scl = scale(norm, ball.radius);
+        const perp = perpendicular(scl);
+        const pointA = add(ball, perp);
+        const pointB = subtract(ball, perp);
+
+        [pointA, pointB].forEach((point) => {
+          const ray = subtract(pinhole, point);
+          const norm = normalize(ray);
+          const length = width;
+          const endPoint = add(pinhole, scale(norm, length));
+
+          ctx.beginPath();
+          ctx.moveTo(point.x, point.y);
+          ctx.lineTo(endPoint.x, endPoint.y);
+          ctx.strokeStyle = "black";
+          ctx.lineWidth = 1;
+          ctx.setLineDash([5, 5]);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        });
+
+        ctx.beginPath();
+        ctx.moveTo(pointA.x, pointA.y);
+        ctx.lineTo(pointB.x, pointB.y);
+        ctx.stroke();
+      });
+    </script>
+  </body>
+</html>

@@ -1,7 +1,7 @@
 const cameraPositions = [];
 
 function loop() {
-  const imgData = getInputImageData();
+  const { imgData, trueCameraPosition } = getInputImageData();
 
   const rgbCounts = segmentImage(imgData);
 
@@ -11,7 +11,7 @@ function loop() {
 
   cameraPositions.push(cameraPosition);
 
-  drawOutput(distancesToBalls, cameraPositions);
+  drawOutput(distancesToBalls, cameraPositions, trueCameraPosition);
 
   requestAnimationFrame(loop);
 }

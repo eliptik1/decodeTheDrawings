@@ -23,9 +23,11 @@ camera.position.copy(INITIAL_CAMERA_POSITION);
 const path = generateCirclePath(INITIAL_CAMERA_POSITION);
 
 function updateSimulation() {
-  camera.position.copy(path.shift());
+  const trueCameraPosition = path.shift();
+  camera.position.copy(trueCameraPosition);
   camera.lookAt(0, PEN_HEIGHT, 0);
   renderer.render(scene, camera);
+  return trueCameraPosition;
 }
 
 function getSimulationImageData() {

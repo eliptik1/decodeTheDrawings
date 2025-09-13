@@ -1,4 +1,4 @@
-function drawOutput(initialDistancesToBalls, path) {
+function drawOutput(initialDistancesToBalls, path, trueCameraPosition) {
   const ctx = outputCanvas.getContext("2d");
   const { width, height } = outputCanvas;
   ctx.fillStyle = "white";
@@ -21,6 +21,10 @@ function drawOutput(initialDistancesToBalls, path) {
   }
 
   path.forEach(({ x, z }) => drawCircle(ctx, x, z, 0.2, "black"));
+
+  if (trueCameraPosition) {
+    drawCircle(ctx, trueCameraPosition.x, trueCameraPosition.z, 0.2, "red");
+  }
 
   ctx.restore();
 }
