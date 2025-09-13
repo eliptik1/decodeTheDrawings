@@ -24,6 +24,7 @@ const path = generateCirclePath(INITIAL_CAMERA_POSITION);
 
 function updateSimulation() {
   camera.position.copy(path.shift());
+  camera.lookAt(0, PEN_HEIGHT, 0);
   renderer.render(scene, camera);
 }
 
